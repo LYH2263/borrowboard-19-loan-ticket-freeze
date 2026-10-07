@@ -24,3 +24,8 @@ input { border: 1px solid var(--line); padding: 6px 8px; font: inherit; width: 1
 .topnav { display: flex; gap: 12px; padding: 8px 16px; border-bottom: 1px solid var(--line); font-size: 13px; }
 .topnav a { color: inherit; }
 .muted { color: #5a5045; font-size: 13px; }
+.recall-tag {
+  display: inline-block; margin-left: 8px; padding: 1px 6px; font-size: 12px;
+  border: 1px solid var(--accent); color: var(--accent); background: #f6e7da;
+}
+.err { color: #8c2f1b; font-size: 13px; }

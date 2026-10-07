@@ -11,7 +11,16 @@ def init_db():
       due_date TEXT, lent_at TEXT, returned_at TEXT
     );
     CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY, value TEXT);
+    CREATE TABLE IF NOT EXISTS recalls(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      loan_id INT NOT NULL, item_id INT NOT NULL,
+      effect TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'open',
+      note TEXT, created_at TEXT, closed_at TEXT
+    );
     """)
+    # 同一笔在借同一时刻最多一张未完成（open）收回工单，数据库层兜底
+    c.execute("""CREATE UNIQUE INDEX IF NOT EXISTS recalls_one_open_per_loan
+                 ON recalls(loan_id) WHERE status='open'""")
     if c.execute("SELECT COUNT(*) c FROM items").fetchone()["c"] == 0:
         c.executemany("INSERT INTO items(title,owner,status,data_quality) VALUES (?,?,?,?)", [
             ("电钻", "老周", "available", "clean"),

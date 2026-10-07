@@ -14,6 +14,7 @@
       <h2>在借 / 逾期</h2>
       <div v-for="l in [...board.overdue, ...board.active]" :key="l.id" class="item" :class="{ overdue: l.overdue }">
         <strong>{{ l.title }}</strong> → {{ l.borrower }}
+        <span v-if="l.recall_id" class="recall-tag">收回中·{{ l.recall_effect === 'settle' ? '当场结还' : '只催待还' }}</span>
         <div class="muted">应还 {{ l.due_date }} {{ l.overdue ? '· 逾期' : '' }}</div>
         <button @click="ret(l.id)">归还</button>
       </div>
