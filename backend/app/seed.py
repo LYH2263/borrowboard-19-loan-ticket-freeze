@@ -10,6 +10,12 @@ def init_db():
       id INTEGER PRIMARY KEY AUTOINCREMENT, item_id INT, borrower TEXT, status TEXT,
       due_date TEXT, lent_at TEXT, returned_at TEXT
     );
+    CREATE TABLE IF NOT EXISTS recalls(
+      id INTEGER PRIMARY KEY AUTOINCREMENT, loan_id INT, item_id INT, owner TEXT,
+      effect TEXT, status TEXT, created_at TEXT, resolved_at TEXT
+    );
+    CREATE UNIQUE INDEX IF NOT EXISTS uniq_open_recall_per_loan
+      ON recalls(loan_id) WHERE status='open';
     CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY, value TEXT);
     """)
     if c.execute("SELECT COUNT(*) c FROM items").fetchone()["c"] == 0:
@@ -22,6 +28,10 @@ def init_db():
         c.execute(
             "INSERT INTO loans(item_id,borrower,status,due_date,lent_at) VALUES (?,?,?,?,?)",
             (4, "邻居甲", "active", "2020-06-01", "2020-05-01"),
+        )
+        c.execute(
+            "INSERT INTO recalls(loan_id,item_id,owner,effect,status,created_at) VALUES (?,?,?,?,?,?)",
+            (1, 4, "阿强", "remind", "open", "2020-06-02"),
         )
         c.execute("INSERT INTO settings(key,value) VALUES ('board_name','木色邻里板')")
         c.commit()
